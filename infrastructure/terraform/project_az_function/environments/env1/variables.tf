@@ -17,7 +17,7 @@ variable "environment" {
 
 
 locals {
-  location =      "Switzerland North"
+  location = "Switzerland North"
   location2 = "switzerlandnorth"
   environment_path = "environments/${var.environment}/"
   storage_account_az_func = "${var.prefix}storaccazfunc1"

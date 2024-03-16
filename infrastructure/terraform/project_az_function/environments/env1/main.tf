@@ -7,6 +7,13 @@ terraform {
       version = ">= 3.96.0"
     }
   }
+
+  backend "azurerm" {
+      resource_group_name  = "alfdevtfstateblob"
+      storage_account_name = "alfdevtfstateblob"
+      container_name       = "alfdevtfstateblob"
+      key                  = "project_az_function_terraform.tfstate"
+  }
 }
 
 # Configure the Microsoft Azure Provider

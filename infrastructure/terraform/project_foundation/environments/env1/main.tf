@@ -4,8 +4,15 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=3.0.0"
+      version = ">= 3.96.0"
     }
+  }
+
+  backend "azurerm" {
+      resource_group_name  = "alfdevtfstateblob"
+      storage_account_name = "alfdevtfstateblob"
+      container_name       = "alfdevtfstateblob"
+      key                  = "project_foundation_terraform.tfstate"
   }
 }
 
