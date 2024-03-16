@@ -3,7 +3,7 @@
 variable "prefix" {
   description = "The resource prefix"
   type = string
-  default = "alf-dev-project1"
+  default = "alfdevpr1"
 }
 
 # needs to be a var to reference from local block
@@ -18,7 +18,9 @@ variable "environment" {
 
 locals {
   location =      "Switzerland North"
+  location2 = "switzerlandnorth"
   environment_path = "environments/${var.environment}/"
+
 
   # make also adressable via "var."
   prefix = "${var.prefix}"
