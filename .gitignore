@@ -1,2 +1,3 @@
 .terraform
 /app/*.zip
+/infrastructure/terraform/project_az_function/environments/env1/PLAN.TERRAFORM
