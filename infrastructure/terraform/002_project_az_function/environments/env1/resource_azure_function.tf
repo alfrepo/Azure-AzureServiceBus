@@ -55,23 +55,4 @@ resource "azurerm_linux_function_app" "az_func_app" {
   }
 }
 
-# unfortunately this presigned URL is required, 
-# so that the azurerm_linux_function_app
-# is able to access the app.zip
-# should find a better way to do it or restrict the access to the function only
-data "azurerm_storage_account_blob_container_sas" "storage_account_blob_container_sas" {
-  connection_string = azurerm_storage_account.storage_account.primary_connection_string
-  container_name    = azurerm_storage_container.func_deploy_container.name
 
-  start = "2024-01-01T00:00:00Z"
-  expiry = "2025-01-01T00:00:00Z"
-
-  permissions {
-    read   = true
-    add    = false
-    create = false
-    write  = false
-    delete = false
-    list   = false
-  }
-}

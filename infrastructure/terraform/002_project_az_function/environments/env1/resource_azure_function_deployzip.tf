@@ -41,7 +41,7 @@ data "azurerm_storage_account_blob_container_sas" "storage_account_blob_containe
   container_name    = azurerm_storage_container.func_deploy_container.name
 
   start = "2024-01-01T00:00:00Z"
-  expiry = "2025-01-01T00:00:00Z"
+  expiry = "2025-01-01T00:00:00Z" # ugly, fixed date
 
   permissions {
     read   = true
