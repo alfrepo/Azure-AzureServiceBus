@@ -40,8 +40,10 @@ data "azurerm_storage_account_blob_container_sas" "storage_account_blob_containe
   connection_string = azurerm_storage_account.storage_account.primary_connection_string
   container_name    = azurerm_storage_container.func_deploy_container.name
 
-  start = "2024-01-01T00:00:00Z"
-  expiry = "2025-01-01T00:00:00Z" # ugly, fixed date
+
+  start = local.startblob
+  expiry = local.expiryblob
+
 
   permissions {
     read   = true

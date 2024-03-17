@@ -29,6 +29,11 @@ locals {
   prefix = "${var.prefix}"
   environment = "${var.environment}"
 
+  # ugly, fixed date
+  startblob = "2024-01-01T00:00:00Z"
+  expiryblob = "2025-01-01T00:00:00Z" 
+
+
   # # Get yesterday's date
   # yesterday = sub(timestamp() , duration(1 * "d"))
 
