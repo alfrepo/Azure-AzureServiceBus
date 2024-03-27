@@ -9,6 +9,9 @@ resource "azurerm_api_management" "app" {
   sku_name = "Developer_1"
 }
 
+
+
+
 resource "azurerm_api_management_api" "mapi" {
   name                = "${local.prefix}-example-api"
   resource_group_name = azurerm_resource_group.rg.name
@@ -18,38 +21,39 @@ resource "azurerm_api_management_api" "mapi" {
   path                = "example"
   protocols           = ["https"]
 
+#   # works with whole swagger
   import {
     content_format = "swagger-link-json"
     content_value  = "http://conferenceapi.azurewebsites.net/?format=json"
   }
 }
 
-resource "azurerm_api_management_api_operation" "example" {
-  operation_id        = "user-get"
-  api_name            = azurerm_api_management_api.mapi.name
-  api_management_name = azurerm_api_management_api.mapi.api_management_name
-  resource_group_name = azurerm_api_management_api.mapi.resource_group_name
-  display_name        = "${local.prefix} Get User Operation"
-  method              = "GET"
-  url_template        = "/users/"
-  description         = "This can only be done by the logged in user."
+# resource "azurerm_api_management_api_operation" "example" {
+#   operation_id        = "user-get"
+#   api_name            = azurerm_api_management_api.mapi.name
+#   api_management_name = azurerm_api_management_api.mapi.api_management_name
+#   resource_group_name = azurerm_api_management_api.mapi.resource_group_name
+#   display_name        = "${local.prefix} Get User Operation"
+#   method              = "GET"
+#   url_template        = "/users/"
+#   description         = "This can only be done by the logged in user."
 
-  template_parameter {
-    name     = "id"
-    type     = "number"
-    required = true
-  }
+#   template_parameter {
+#     name     = "id"
+#     type     = "number"
+#     required = true
+#   }
 
-  response {
-    status_code = 200
-  }
-}
+#   response {
+#     status_code = 200
+#   }
+# }
 
-resource "azurerm_api_management_api_operation_tag" "example" {
-  name             = "${local.prefix}-example-Tag"
-  api_operation_id = azurerm_api_management_api_operation.example.id
-  display_name     = "example-Tag"
-}
+# resource "azurerm_api_management_api_operation_tag" "example" {
+#   name             = "${local.prefix}-example-Tag"
+#   api_operation_id = azurerm_api_management_api_operation.example.id
+#   display_name     = "example-Tag"
+# }
 
 
 # # https://github.com/hashicorp/terraform-provider-azurerm/issues/5032
