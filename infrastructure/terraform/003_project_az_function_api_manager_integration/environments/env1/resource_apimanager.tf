@@ -9,7 +9,13 @@ resource "azurerm_api_management" "app" {
   sku_name = "Developer_1"
 }
 
-
+resource "azurerm_api_management_named_value" "example" {
+  name                = "example-apimg"
+  resource_group_name = azurerm_resource_group.rg.name
+  api_management_name = azurerm_api_management.app.name
+  display_name        = "ExampleProperty"
+  value               = "Example Value"
+}
 
 
 resource "azurerm_api_management_api" "mapi" {
@@ -54,21 +60,66 @@ resource "azurerm_api_management_api_operation" "example" {
 
 # # Adds the function app as a backend for the API.
 # resource "azurerm_api_management_backend" "api" {
-#   name                = azurerm_linux_function_app.az_func_app.name
-#   description         = azurerm_linux_function_app.az_func_app.name
+#   name                = "example-backend"
 #   #resource_id         = "https://management.azure.com${azurerm_linux_function_app.az_func_app.id}"
 #   resource_group_name = azurerm_resource_group.rg.name
 #   api_management_name = azurerm_api_management.app.name
 #   protocol            = "http"
-#   url                 = "https://${azurerm_linux_function_app.az_func_app.default_hostname}/api"
+#   url                 = "https://${azurerm_linux_function_app.az_func_app.name}.azurewebsites.net/api/"
 
 #   credentials {
-#     certificate = []
-#     header      = {
-#         "x-functions-key" = "{{${azurerm_linux_function_app.az_func_app.name}-key}}"
-#       }
-#     query       = {}
+#     header = {
+#       "x-functions-key" = "${data.azurerm_linux_function_app.az_func_app.function}"
+#     }
 #   }
+# }
+
+
+# how to handle 400 error
+# https://github.com/hashicorp/terraform-provider-azurerm/issues/23130
+
+resource "azurerm_api_management_backend" "api_gateway__az_func_app_function_app" {
+  name                = "example-backend"
+  resource_group_name = azurerm_resource_group.rg.name
+  api_management_name = azurerm_api_management.app.name
+
+  protocol = "http"
+  url      = "https://${azurerm_linux_function_app.az_func_app.name}.azurewebsites.net"
+
+  credentials {
+    header = {
+      # Syntax refs https://github.com/hashicorp/terraform-provider-azurerm/issues/14575#issuecomment-1662020472
+      # This value should match the value of azurerm_api_management_named_value.api_gateway__az_func_app_account_key.name
+      "x-functions-key" = "{{${azurerm_linux_function_app.az_func_app.name}-key}}"
+    }
+  }
+
+  depends_on = [
+    azurerm_resource_group.rg,
+    azurerm_api_management.app,
+    azurerm_linux_function_app.az_func_app,
+    # It uses a reference syntax above, so this value must exist first, or validation can fail
+    # "Backend: "api-host-function-app-backend"): unexpected status 400 with error: ValidationError: One or more fields contain incorrect values"
+    azurerm_api_management_named_value.example
+    #  azurerm_api_management_named_value.api_gateway__az_func_app_account_key
+  ]
+}
+
+
+
+# resource "azurerm_api_management_api_policy" "example" {
+#   api_name            = azurerm_api_management_api.mapi.name
+#   api_management_name = azurerm_api_management_api.mapi.api_management_name
+#   resource_group_name = azurerm_api_management_api.mapi.resource_group_name
+
+#   xml_content = <<XML
+# <policies>
+#   <inbound>
+#     <base/>
+#     <set-backend-service backend-id="example-backend" />
+#   </inbound>
+# </policies>
+# XML
 # }
 
 # # Adds a policy that routes REST calls to the function app.

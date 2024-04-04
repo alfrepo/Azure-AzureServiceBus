@@ -35,6 +35,11 @@ resource "azurerm_linux_function_app" "az_func_app" {
     type = "SystemAssigned"
   }
 
+  auth_settings {
+    enabled          = false
+    unauthenticated_client_action = "AllowAnonymous"
+  }
+
   site_config {
     application_stack {
       python_version = "3.11"
