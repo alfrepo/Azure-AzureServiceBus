@@ -1,5 +1,5 @@
-functionname="alfdevpr1alfdevfunction2-func"
-resourceg="alfdevpr1-my-azfunc1-rg"
+functionname="alfdevapi3alfdevfunction-func"
+resourceg="alfdevapi3-my-azfunc-rg"
 
 
 az functionapp deployment source config-zip -g $resourceg -n $functionname --src app.zip

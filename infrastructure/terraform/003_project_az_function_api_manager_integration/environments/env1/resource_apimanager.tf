@@ -107,42 +107,27 @@ resource "azurerm_api_management_backend" "api_gateway__az_func_app_function_app
 
 
 
-# resource "azurerm_api_management_api_policy" "example" {
-#   api_name            = azurerm_api_management_api.mapi.name
-#   api_management_name = azurerm_api_management_api.mapi.api_management_name
-#   resource_group_name = azurerm_api_management_api.mapi.resource_group_name
+# Adds a policy that routes REST calls to the function app.
+resource "azurerm_api_management_api_policy" "api" {
+  api_name            = azurerm_api_management_api.mapi.name
+  api_management_name = azurerm_api_management_api.mapi.api_management_name
+  resource_group_name = azurerm_resource_group.rg.name
 
-#   xml_content = <<XML
-# <policies>
-#   <inbound>
-#     <base/>
-#     <set-backend-service backend-id="example-backend" />
-#   </inbound>
-# </policies>
-# XML
-# }
-
-# # Adds a policy that routes REST calls to the function app.
-# resource "azurerm_api_management_api_policy" "api" {
-#   api_name            = azurerm_api_management_api.mapi.name
-#   api_management_name = azurerm_api_management_api.mapi.api_management_name
-#   resource_group_name = azurerm_resource_group.rg.name
-
-#   xml_content = <<XML
-# <policies>
-#     <inbound>
-#         <base />
-#         <set-backend-service id="apim-generated-policy" backend-id="${azurerm_linux_function_app.az_func_app.name}" />
-#     </inbound>
-#     <backend>
-#         <base />
-#     </backend>
-#     <outbound>
-#         <base />
-#     </outbound>
-#     <on-error>
-#         <base />
-#     </on-error>
-# </policies>
-# XML
-# }
+  xml_content = <<XML
+<policies>
+    <inbound>
+        <base />
+        <set-backend-service id="apim-generated-policy" backend-id="${azurerm_linux_function_app.az_func_app.name}" />
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>
+XML
+}
