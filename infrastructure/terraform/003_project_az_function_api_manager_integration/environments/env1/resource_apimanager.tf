@@ -18,13 +18,18 @@ resource "azurerm_api_management_named_value" "example" {
 }
 
 
+# correct is :
+#https://alfdevapi3-example-apim.azure-api.net/alfdevapi3alfdevfunction-func/http_trigger
+# question: how to decouple frontend-name from backend-name?
+
 resource "azurerm_api_management_api" "mapi" {
   name                = "${local.prefix}-example-api"
   resource_group_name = azurerm_resource_group.rg.name
   api_management_name = azurerm_api_management.app.name
   revision            = "1"
   display_name        = "Example API"
-  path                = "example"
+  #path                = azurerm_linux_function_app.az_func_app.name #TODO use the func ref
+  path                = "hohosomemypathalf"
   protocols           = ["https"]
 
 #   # works with whole swagger
@@ -41,7 +46,7 @@ resource "azurerm_api_management_api_operation" "example" {
   resource_group_name = azurerm_api_management_api.mapi.resource_group_name
   display_name        = "${local.prefix} Get User Operation"
   method              = "GET"
-  url_template        = "/users/"
+  url_template        = "/http_trigger"
   description         = "This gonna trigger my azure function."
 
   response {
@@ -78,8 +83,10 @@ resource "azurerm_api_management_api_operation" "example" {
 # how to handle 400 error
 # https://github.com/hashicorp/terraform-provider-azurerm/issues/23130
 
-resource "azurerm_api_management_backend" "api_gateway__az_func_app_function_app" {
-  name                = "example-backend"
+
+
+resource "azurerm_api_management_backend" "backend_1" {
+  name                = "${local.prefix}-ma-backend"
   resource_group_name = azurerm_resource_group.rg.name
   api_management_name = azurerm_api_management.app.name
 
@@ -94,6 +101,10 @@ resource "azurerm_api_management_backend" "api_gateway__az_func_app_function_app
     }
   }
 
+
+  # Note to me:
+  # it might help against "unexpected status 400 with error"
+  # to MANUALLY provision an API on APIM for the deployed Azure function
   depends_on = [
     azurerm_resource_group.rg,
     azurerm_api_management.app,
@@ -107,11 +118,31 @@ resource "azurerm_api_management_backend" "api_gateway__az_func_app_function_app
 
 
 
+# resource "azurerm_api_management_api_policy" "example" {
+#   api_name            = azurerm_api_management_api.mapi.name
+#   api_management_name = azurerm_api_management_api.mapi.api_management_name
+#   resource_group_name = azurerm_api_management_api.mapi.resource_group_name
+
+#   xml_content = <<XML
+# <policies>
+#   <inbound>
+#     <base/>
+#     <set-backend-service backend-id="example-backend" />
+#   </inbound>
+# </policies>
+# XML
+# }
+
 # Adds a policy that routes REST calls to the function app.
 resource "azurerm_api_management_api_policy" "api" {
   api_name            = azurerm_api_management_api.mapi.name
-  api_management_name = azurerm_api_management_api.mapi.api_management_name
+  api_management_name = azurerm_api_management.app.name
   resource_group_name = azurerm_resource_group.rg.name
+
+  depends_on = [
+    azurerm_api_management_backend.backend_1,
+    azurerm_api_management_api.mapi
+  ]
 
   xml_content = <<XML
 <policies>
