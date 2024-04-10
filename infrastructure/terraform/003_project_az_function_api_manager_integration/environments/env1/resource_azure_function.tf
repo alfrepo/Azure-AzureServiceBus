@@ -13,12 +13,6 @@ resource "azurerm_service_plan" "sp" {
 #  sku_name            = "B1" # Basic small dedicated plan, scalable
 }
 
-# resource "azurerm_application_insights" "az_func_insights" {
-#   name                = "${var.prefix}-appinsights"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   location            = azurerm_resource_group.rg.location
-#   application_type    = "web"
-# }
 
 resource "azurerm_linux_function_app" "az_func_app" {
   name                       = local.az_function_name

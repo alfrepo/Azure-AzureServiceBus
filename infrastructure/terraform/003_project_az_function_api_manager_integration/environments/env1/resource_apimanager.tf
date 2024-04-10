@@ -54,12 +54,6 @@ resource "azurerm_api_management_api_operation" "example" {
   }
 }
 
-# resource "azurerm_api_management_api_operation_tag" "example" {
-#   name             = "${local.prefix}-example-Tag"
-#   api_operation_id = azurerm_api_management_api_operation.example.id
-#   display_name     = "example-Tag"
-# }
-
 
 # # https://github.com/hashicorp/terraform-provider-azurerm/issues/5032
 
@@ -117,21 +111,6 @@ resource "azurerm_api_management_backend" "backend_1" {
 }
 
 
-
-# resource "azurerm_api_management_api_policy" "example" {
-#   api_name            = azurerm_api_management_api.mapi.name
-#   api_management_name = azurerm_api_management_api.mapi.api_management_name
-#   resource_group_name = azurerm_api_management_api.mapi.resource_group_name
-
-#   xml_content = <<XML
-# <policies>
-#   <inbound>
-#     <base/>
-#     <set-backend-service backend-id="example-backend" />
-#   </inbound>
-# </policies>
-# XML
-# }
 
 # Adds a policy that routes REST calls to the function app.
 resource "azurerm_api_management_api_policy" "api" {
