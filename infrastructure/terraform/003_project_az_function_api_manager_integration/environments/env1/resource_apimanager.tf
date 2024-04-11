@@ -55,23 +55,6 @@ resource "azurerm_api_management_api_operation" "example" {
 }
 
 
-# # https://github.com/hashicorp/terraform-provider-azurerm/issues/5032
-
-# # Adds the function app as a backend for the API.
-# resource "azurerm_api_management_backend" "api" {
-#   name                = "example-backend"
-#   #resource_id         = "https://management.azure.com${azurerm_linux_function_app.az_func_app.id}"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   api_management_name = azurerm_api_management.app.name
-#   protocol            = "http"
-#   url                 = "https://${azurerm_linux_function_app.az_func_app.name}.azurewebsites.net/api/"
-
-#   credentials {
-#     header = {
-#       "x-functions-key" = "${data.azurerm_linux_function_app.az_func_app.function}"
-#     }
-#   }
-# }
 
 
 # how to handle 400 error
