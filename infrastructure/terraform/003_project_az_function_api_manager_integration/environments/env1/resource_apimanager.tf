@@ -111,6 +111,15 @@ resource "azurerm_api_management_api_policy" "api" {
     <inbound>
         <base />
         <set-backend-service id="apim-generated-policy" backend-id="${azurerm_linux_function_app.az_func_app.name}" />
+        <cors allow-credentials="false">
+            <allowed-origins>
+                <origin>*</origin>
+            </allowed-origins>
+            <allowed-methods>
+                <method>GET</method>
+                <method>POST</method>
+            </allowed-methods>
+        </cors>
     </inbound>
     <backend>
         <base />

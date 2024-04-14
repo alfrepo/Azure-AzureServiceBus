@@ -36,9 +36,13 @@ resource "azurerm_linux_function_app" "az_func_app" {
     unauthenticated_client_action = "AllowAnonymous"
   }
 
+  app_settings = {
+      ServiceBusConnection    = azurerm_servicebus_namespace_authorization_rule.sb-ar.primary_connection_string
+  }
+
   site_config {
     application_stack {
-      python_version = "3.11"
+      python_version = "3.10"
     }
   }
 }
