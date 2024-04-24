@@ -3,4 +3,5 @@
 /infrastructure/terraform/project_az_function/environments/env1/PLAN.TERRAFORM
 **/PLAN.TERRAFORM
 PLAN.TERRAFORM
-/infrastructure/terraform/003_project_az_function_api_manager_integration/environments/env1/terraform.log
+**/terraform.log
+terraform.log

@@ -35,7 +35,7 @@ For some reason it helps to manually
  - DONE make the api redeployment - also deploy the code and http_trigger. At he moment the code disapears when redeployed
 - DONE add CORS origin * https://stackoverflow.com/questions/62040830/azure-api-management-origin-header-was-missing-or-empty-and-the-request-was-cl
 
-- add a "azure service bus queue"
+- DONE add a "azure service bus queue"
 - make python function send a message to the queue
 - make function be triggered by azure service bus
     - https://stackoverflow.com/questions/77637034/python-azure-function-service-bus-queue-trigger-doesnt-work
