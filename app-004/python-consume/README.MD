@@ -18,7 +18,7 @@ set ServiceBusConnection to point to your service bus
 
 ``` shell
 # run the function
-func start --verbose
+func start --port 7071 --verbose
 
 # call now
 curl http://localhost:7071/api/http_trigger?name=Alex
