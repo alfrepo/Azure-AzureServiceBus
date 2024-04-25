@@ -15,38 +15,38 @@ resource "azurerm_service_plan" "sp" {
 }
 
 
-resource "azurerm_linux_function_app" "az_func_app_publisher" {
-  name                       = "${local.az_function_name}-pub"
-  location                   = local.location
-  resource_group_name        = azurerm_resource_group.rg.name
+# resource "azurerm_linux_function_app" "az_func_app_publisher" {
+#   name                       = "${local.az_function_name}-pub"
+#   location                   = local.location
+#   resource_group_name        = azurerm_resource_group.rg.name
 
-  service_plan_id             = azurerm_service_plan.sp.id
-  storage_account_name       = azurerm_storage_account.storage_account.name
-  storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
-  https_only                 = true
-  public_network_access_enabled  = true
+#   service_plan_id             = azurerm_service_plan.sp.id
+#   storage_account_name       = azurerm_storage_account.storage_account.name
+#   storage_account_access_key = azurerm_storage_account.storage_account.primary_access_key
+#   https_only                 = true
+#   public_network_access_enabled  = true
 
-  zip_deploy_file  = "${path.module}/../../../../../app-004/python-publish/app.zip"
+#   zip_deploy_file  = "${path.module}/../../../../../app-004/python-publish/app.zip"
 
-  identity {
-    type = "SystemAssigned"
-  }
+#   identity {
+#     type = "SystemAssigned"
+#   }
 
-  auth_settings {
-    enabled          = false
-    unauthenticated_client_action = "AllowAnonymous"
-  }
+#   auth_settings {
+#     enabled          = false
+#     unauthenticated_client_action = "AllowAnonymous"
+#   }
 
-  app_settings = {
-      ServiceBusConnection    = azurerm_servicebus_namespace_authorization_rule.sb-ar.primary_connection_string
-  }
+#   app_settings = {
+#       ServiceBusConnection    = azurerm_servicebus_namespace_authorization_rule.sb-ar.primary_connection_string
+#   }
 
-  site_config {
-    application_stack {
-      python_version = local.python_version
-    }
-  }
-}
+#   site_config {
+#     application_stack {
+#       python_version = local.python_version
+#     }
+#   }
+# }
 
 # resource "azurerm_linux_function_app" "az_func_app_consumer" {
 #   name                       = "${local.az_function_name}-con"

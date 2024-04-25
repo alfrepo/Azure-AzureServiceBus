@@ -18,7 +18,7 @@ resource "azurerm_servicebus_namespace_authorization_rule" "sb-ar" {
   name                = "${var.prefix}servicebus_auth_rule"
   namespace_id        = azurerm_servicebus_namespace.sb.id 
 
-  listen = false
+  listen = true
   send   = true
   manage = false
 }

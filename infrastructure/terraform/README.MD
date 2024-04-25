@@ -37,5 +37,7 @@ For some reason it helps to manually
 
 - DONE add a "azure service bus queue"
 - make python function send a message to the queue
+ - run functions locally and see them receiving the message
 - make function be triggered by azure service bus
     - https://stackoverflow.com/questions/77637034/python-azure-function-service-bus-queue-trigger-doesnt-work
+ - fix the "http_trigger" which is missing after deployment
