@@ -25,7 +25,7 @@ resource "azurerm_linux_function_app" "az_func_app" {
   https_only                 = true
   public_network_access_enabled  = true
 
-  zip_deploy_file  = "${path.module}/../../../../../app/app.zip"
+  #zip_deploy_file  = "${path.module}/../../../../../app-005/app.zip"
 
   identity {
     type = "SystemAssigned"

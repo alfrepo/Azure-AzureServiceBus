@@ -1,7 +1,6 @@
 import azure.functions as func
 import logging
 import os
-import logging
 from azure.servicebus import ServiceBusClient, ServiceBusMessage
 
 
