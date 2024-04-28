@@ -39,7 +39,12 @@ For some reason it helps to manually
  - DONE make python function send a message to the queue
  - DONE run functions locally and see them receiving the message
 
- - Merge the ServiceBus POSTING function with the default function. Find why its not connecting.
+- DONE fix the "http_trigger" which is missing after deployment
+    The reason was - invalid import of ServiceBus. Seems to be somehow incompatible with triggers.
+    Maybe the imports were from v1 model and triggers-annotation from v2 model?
+    Try to use func.Servicebus from azure-function import, to send queue messages
+
+ TODO
     - check if you can use "func.ServiceBusMessage" instead of importing serviceBus
 
 
@@ -47,5 +52,3 @@ For some reason it helps to manually
     https://learn.microsoft.com/en-us/azure/service-bus-messaging/message-sessions
 
 - Subscribers can define which messages they want to receive from a topic.
-
-- fix the "http_trigger" which is missing after deployment

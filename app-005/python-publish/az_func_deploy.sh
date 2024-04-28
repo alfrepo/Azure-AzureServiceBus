@@ -1,4 +1,4 @@
-functionname="alfdevapi5alfdevfunction-func"
+functionname="alfdevapi5alfdevfunction-func-pub"
 resourceg="alfdevapi5-my-azfunc-rg"
 
 
