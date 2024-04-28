@@ -25,6 +25,8 @@ resource "azurerm_linux_function_app" "az_func_app_consumer" {
   https_only                 = true
   public_network_access_enabled  = true
 
+  # sometimes the function deployment failes, when deployed from zero. Keep an eye on it.
+  # if it happens - activate direct upload of zip to blob-container as in commented resource_azure_function_deployzip.tf
   zip_deploy_file  = "${path.module}/../../../../../app-005/python-consume/app.zip"
 
 
