@@ -25,7 +25,7 @@ resource "azurerm_linux_function_app" "az_func_app_consumer" {
   https_only                 = true
   public_network_access_enabled  = true
 
-  #zip_deploy_file  = "${path.module}/../../../../../app-004/python-consume/app.zip"
+  zip_deploy_file  = "${path.module}/../../../../../app-005/python-consume/app.zip"
 
 
   identity {
@@ -66,7 +66,7 @@ resource "azurerm_linux_function_app" "az_func_app_publish" {
   https_only                 = true
   public_network_access_enabled  = true
 
-  #zip_deploy_file  = "${path.module}/../../../../../app-004/python-publish/app.zip"
+  zip_deploy_file  = "${path.module}/../../../../../app-005/python-publish/app.zip"
 
 
   identity {
