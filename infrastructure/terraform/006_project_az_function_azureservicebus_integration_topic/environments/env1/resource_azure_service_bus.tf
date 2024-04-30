@@ -16,14 +16,16 @@ resource "azurerm_servicebus_namespace_authorization_rule" "sb-ar" {
   manage = false
 }
 
-resource "azurerm_servicebus_topic" "mtopic" {
-  name                = "${var.prefix}topic"
-  namespace_id        = azurerm_servicebus_namespace.sb.id 
-}
+
 
 resource "azurerm_servicebus_subscription" "example" {
   count               = 1
-  name                = "${var.prefix}subscription-${count.index}"
+  name                = "${var.prefix}subscription"
   topic_id            = azurerm_servicebus_topic.mtopic.id
   max_delivery_count  = 1
+}
+
+resource "azurerm_servicebus_topic" "mtopic" {
+  name                = "${var.prefix}topic"
+  namespace_id        = azurerm_servicebus_namespace.sb.id 
 }

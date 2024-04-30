@@ -47,6 +47,12 @@ resource "azurerm_linux_function_app" "az_func_app_consumer" {
     application_stack {
       python_version = local.python_version
     }
+    cors {
+      allowed_origins = ["https://portal.azure.com"]
+    }
+    application_insights_connection_string = "${azurerm_application_insights.app_insight_con.connection_string}"
+    application_insights_key = "${azurerm_application_insights.app_insight_con.instrumentation_key}"
+
   }
 
   # provisioner "local-exec" {
@@ -88,10 +94,40 @@ resource "azurerm_linux_function_app" "az_func_app_publish" {
     application_stack {
       python_version = local.python_version
     }
+    cors {
+      allowed_origins = ["https://portal.azure.com"]
+    }
+    application_insights_connection_string = "${azurerm_application_insights.app_insight_pub.connection_string}"
+    application_insights_key = "${azurerm_application_insights.app_insight_pub.instrumentation_key}"
   }
 
   # provisioner "local-exec" {
   #   command = "az functionapp deployment source config-zip -g ${azurerm_linux_function_app.az_func_app_consumer.resource_group_name} -n ${azurerm_linux_function_app.az_func_app_consumer.name} --src ${path.module}/../../../../../app-006/python-publish/app.zip"
   # }
 
+}
+
+# App Insight is created with Workspace Mode 
+resource "azurerm_log_analytics_workspace" "law_fxapp" {
+  name                = "appinsight-law"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = local.location
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+resource "azurerm_application_insights" "app_insight_pub" {
+  name = "${var.prefix}az_func_app_publish"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = local.location
+  workspace_id = azurerm_log_analytics_workspace.law_fxapp.id
+  application_type    = "web"
+}
+
+resource "azurerm_application_insights" "app_insight_con" {
+  name = "${var.prefix}az_func_app_consumer"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = local.location
+  workspace_id = azurerm_log_analytics_workspace.law_fxapp.id
+  application_type    = "web"
 }
