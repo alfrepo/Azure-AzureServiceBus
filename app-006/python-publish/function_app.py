@@ -1,6 +1,7 @@
 import logging
 import azure.functions as func
 from datetime import datetime
+import json
 
 
 app = func.FunctionApp()
@@ -25,7 +26,34 @@ def http_trigger_topic(req: func.HttpRequest, message: func.Out[str]) -> func.Ht
 
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    message.set(f"{myMessage}. Published at {now}")
+    my_json_string = f"""
+    {{
+        "body": "{myMessage}",
+        "customProperties": {{
+            "messagenumber": 0,
+            "timePublish": "{now}",
+        }},
+        "brokerProperties": {{
+            "SessionId": "1"
+        }}
+    }}
+    """
+
+    # my_json_dict = {
+    #     "body": "{myMessage}",
+    #     "customProperties": {
+    #         "messagenumber": 0,
+    #         "timePublish": "{now}",
+    #     },
+    #     "brokerProperties": {
+    #         "SessionId": "1"
+    #     }
+    # }
+
+    # json_string = json.dumps(my_json_dict)
+
+    message.set(my_json_string)
+
 
     return func.HttpResponse(
         "This function should process queue messages.",
