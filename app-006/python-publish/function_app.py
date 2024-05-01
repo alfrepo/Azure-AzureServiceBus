@@ -1,5 +1,7 @@
 import logging
 import azure.functions as func
+from datetime import datetime
+
 
 app = func.FunctionApp()
 
@@ -17,7 +19,13 @@ def http_trigger_topic(req: func.HttpRequest, message: func.Out[str]) -> func.Ht
     logging.info(myMessage)
     
     input_msg = req.params.get('message')
-    message.set(f"{myMessage} {input_msg}")
+
+    now = datetime.now()
+    print("now =", now)
+
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    message.set(f"{myMessage}. Published at {now}")
 
     return func.HttpResponse(
         "This function should process queue messages.",
