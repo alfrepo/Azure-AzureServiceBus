@@ -31,6 +31,7 @@ locals {
   environment = "${var.environment}"
 
   python_version = "3.10"
+  java_version = "17"
 
 
   # ugly, fixed date
