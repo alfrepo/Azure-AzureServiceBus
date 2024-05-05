@@ -18,13 +18,4 @@ terraform apply "PLAN.TERRAFORM"
 
 
 # deploy the functions now
-APPNAME="app-006"
-
-
-cd ./../../../../../${APPNAME}/python-publish/
-bash az_func_deploy.sh
-cd -
-
-cd ./../../../../../${APPNAME}/python-consume/
-bash az_func_deploy.sh
-cd -
+bash deployFunctions.sh

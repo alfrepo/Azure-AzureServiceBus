@@ -37,4 +37,7 @@ locals {
   # ugly, fixed date
   startblob = "2024-01-01T00:00:00Z"
   expiryblob = "2025-01-01T00:00:00Z" 
+
+  servicebus_session1 = "session1"
+  servicebus_session2 = "session2"
 }

@@ -1,7 +1,7 @@
 import logging
 import azure.functions as func
 from datetime import datetime
-import json
+import os
 from azure.servicebus import ServiceBusClient, ServiceBusMessage
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -10,15 +10,20 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 # https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus-output?tabs=python-v2%2Cisolated-process%2Cnodejs-v4%2Cextensionv5&pivots=programming-language-python
 
 
-TOPIC_NAME_A = "alfdevapi6topic" 
-CONN_STRING = os.environ['ServiceBusConnection']
-SESSION_ID = "008"
-
 
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
     myMessage = "Hi alf this is my message via the queue to you."
+
+    TOPIC_NAME_A = os.environ['Topic']
+    CONN_STRING = os.environ['ServiceBusConnection']
+    SESSION_ID = os.environ['SessionId']
+
+    logging.info(f'TOPIC_NAME_A {TOPIC_NAME_A}')
+    logging.info(f'CONN_STRING {CONN_STRING}')
+    logging.info(f'SESSION_ID {SESSION_ID}')
+
 
     jsn_message_envelope =  generateMessage(myMessage, SESSION_ID)
     logging.info(f"Will send envelope: {jsn_message_envelope}")
