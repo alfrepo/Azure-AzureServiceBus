@@ -16,3 +16,5 @@ SESSION_ID = os.environ['SessionId']
 def servicebus_trigger(azservicebus: func.ServiceBusMessage):
     logging.warn('Python ServiceBus Queue trigger processed a message: %s',
                 azservicebus.get_body().decode('utf-8'))
+
+

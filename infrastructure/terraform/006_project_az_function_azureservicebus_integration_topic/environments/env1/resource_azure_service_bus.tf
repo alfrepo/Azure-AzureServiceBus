@@ -17,6 +17,11 @@ resource "azurerm_servicebus_namespace_authorization_rule" "sb-ar" {
 }
 
 
+resource "azurerm_servicebus_topic" "mtopic" {
+  name                = "${var.prefix}topic"
+  namespace_id        = azurerm_servicebus_namespace.sb.id 
+}
+
 
 resource "azurerm_servicebus_subscription" "example" {
   name                = "${var.prefix}subscription"
@@ -24,7 +29,32 @@ resource "azurerm_servicebus_subscription" "example" {
   max_delivery_count  = 1
 }
 
-resource "azurerm_servicebus_topic" "mtopic" {
-  name                = "${var.prefix}topic"
-  namespace_id        = azurerm_servicebus_namespace.sb.id 
+
+
+resource "azurerm_servicebus_subscription_rule" "rule_session1" {
+  name            = "rule_${local.servicebus_session1}"
+  subscription_id = azurerm_servicebus_subscription.example.id
+  filter_type     = "CorrelationFilter"
+
+  correlation_filter {
+    session_id = "${local.servicebus_session1}"
+  }
+}
+
+
+resource "azurerm_servicebus_subscription" "example2" {
+  name                = "${var.prefix}subscription2"
+  topic_id            = azurerm_servicebus_topic.mtopic.id
+  max_delivery_count  = 1
+}
+
+
+resource "azurerm_servicebus_subscription_rule" "rule_session2" {
+  name            = "rule_${local.servicebus_session1}"
+  subscription_id = azurerm_servicebus_subscription.example2.id
+  filter_type     = "CorrelationFilter"
+
+  correlation_filter {
+    session_id = "${local.servicebus_session2}"
+  }
 }
