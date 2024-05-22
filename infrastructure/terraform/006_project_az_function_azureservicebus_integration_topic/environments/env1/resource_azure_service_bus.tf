@@ -50,7 +50,7 @@ resource "azurerm_servicebus_subscription" "example2" {
 
 
 resource "azurerm_servicebus_subscription_rule" "rule_session2" {
-  name            = "rule_${local.servicebus_session1}"
+  name            = "rule_${local.servicebus_session2}"
   subscription_id = azurerm_servicebus_subscription.example2.id
   filter_type     = "CorrelationFilter"
 
