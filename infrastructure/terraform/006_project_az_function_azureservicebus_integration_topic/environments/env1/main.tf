@@ -12,7 +12,7 @@ terraform {
       resource_group_name  = "alfdevtfstateblob"
       storage_account_name = "alfdevtfstateblob"
       container_name       = "alfdevtfstateblob"
-      key                  = "005_project_az_function_api_manager_integration.tfstate"
+      key                  = "006_project_az_function_api_manager_integration.tfstate"
   }
 }
 
