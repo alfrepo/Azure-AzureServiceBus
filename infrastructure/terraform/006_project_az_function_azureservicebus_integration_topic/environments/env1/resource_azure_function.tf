@@ -162,7 +162,7 @@ module "az_function_servicebus_pub2" {
   Env_ServiceBusConnection = azurerm_servicebus_namespace_authorization_rule.sb-ar.primary_connection_string
   Env_ServiceBusTopicName = azurerm_servicebus_topic.mtopic.name
   Env_ServiceBusSessionId = local.servicebus_session2
-  Env_Subscription = "${azurerm_servicebus_subscription.example.name}" 
+  Env_Subscription = "${azurerm_servicebus_subscription.example2.name}" 
   service_plan_id             = "${azurerm_service_plan.sp.id}" 
 }
 
@@ -181,7 +181,7 @@ module "az_function_servicebus_con2" {
   Env_ServiceBusConnection = azurerm_servicebus_namespace_authorization_rule.sb-ar.primary_connection_string
   Env_ServiceBusTopicName = azurerm_servicebus_topic.mtopic.name
   Env_ServiceBusSessionId = local.servicebus_session2
-  Env_Subscription = "${azurerm_servicebus_subscription.example.name}" 
+  Env_Subscription = "${azurerm_servicebus_subscription.example2.name}" 
   service_plan_id             = "${azurerm_service_plan.sp.id}" 
 }
 

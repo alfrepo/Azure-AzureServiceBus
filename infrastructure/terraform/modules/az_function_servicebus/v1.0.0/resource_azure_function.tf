@@ -31,6 +31,7 @@ resource "azurerm_linux_function_app" "az_func_app" {
       ServiceBusConnection    = "${var.Env_ServiceBusConnection}"
       Topic = "${var.Env_ServiceBusTopicName}"
       SessionId = "${var.Env_ServiceBusSessionId}"
+      Subscription = "${var.Env_Subscription}"
   }
 
   site_config {

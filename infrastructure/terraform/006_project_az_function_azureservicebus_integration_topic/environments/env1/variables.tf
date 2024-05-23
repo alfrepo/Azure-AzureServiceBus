@@ -23,8 +23,8 @@ locals {
   environment_path = "environments/${var.environment}/"
   resourcegroup = "${var.prefix}-my-azfunc-rg"
   storage_account_az_func = "${var.prefix}storaccazfunc"
-  az_function_name = "${var.prefix}alfdevfunction-func"
-  azurerm_function_app = "${var.prefix}alfdevfunction2-func"
+  az_function_name = "${var.prefix}-func1"
+  azurerm_function_app = "${var.prefix}-func2"
 
   # make also adressable via "var."
   prefix = "${var.prefix}"
