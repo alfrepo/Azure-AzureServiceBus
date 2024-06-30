@@ -44,11 +44,26 @@ For some reason it helps to manually
     Maybe the imports were from v1 model and triggers-annotation from v2 model?
     Try to use func.Servicebus from azure-function import, to send queue messages
 
+- DONE integrate api-manager API directly with azure-service-bus-topic 
+    - see https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
+
+- TODO validate the integration of REST api and azureservice bus via policies
+
+- TODO 
+    try code with in resource_apimanager.tf
+    resource "azurerm_role_assignment" "apim_role_assignment"
+
  TODO
     - check if you can use "func.ServiceBusMessage" instead of importing serviceBus
 
+- deploy hello-world SOAP API via Terraform (api.wsdl)
+- deploy a SOAP api instead of REST API
 
  - use topics/ sessions, to validate FIFO ability of Azure Service Bus 
     https://learn.microsoft.com/en-us/azure/service-bus-messaging/message-sessions
 
-- Subscribers can define which messages they want to receive from a topic.
+
+- improve the SOAP api to receive a message, 
+    AND turn message into a topic on azure-service-bus
+- test via "curl SOAP request"
+- receive the message via example "azure-function"
