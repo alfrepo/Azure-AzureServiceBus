@@ -46,3 +46,7 @@ dependencyManagement {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.bootRun {
+	systemProperties["server.port"] = "7080"
+}
