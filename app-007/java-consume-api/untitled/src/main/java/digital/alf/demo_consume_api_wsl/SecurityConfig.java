@@ -12,6 +12,6 @@ public class SecurityConfig  {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web
                 .ignoring()
-                .requestMatchers("/public/*");
+                .requestMatchers("/public/**");
     }
 }
