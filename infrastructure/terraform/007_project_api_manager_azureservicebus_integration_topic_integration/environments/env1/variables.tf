@@ -3,7 +3,7 @@
 variable "prefix" {
   description = "The resource prefix"
   type = string
-  default = "alfdevapi7"
+  default = "alfdevsc7"
 }
 
 # needs to be a var to reference from local block

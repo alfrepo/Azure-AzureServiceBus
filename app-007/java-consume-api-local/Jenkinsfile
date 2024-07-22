@@ -1,0 +1,28 @@
+import org.apache.commons.io.FileUtils
+library identifier: 'PipelineUtils@master', retriever: modernSCM(
+        [$class: 'GitSCMSource',
+         remote: 'https://scm.sc.intra/scm/jenkins/pipeline-helper.git',
+         credentialsId: 'bitbucket.service.user'
+        ])
+library identifier: 'jap-ci-pipeline@master', retriever: modernSCM(
+        [$class: 'GitSCMSource',
+         remote: 'https://scm.sc.intra/scm/jenkins/jap-ci-pipeline.git',
+         credentialsId: 'bitbucket.service.user'
+        ])
+
+/*
+ * Run build with target artifacts: Docker Container, Helm-Chart.
+ */
+ defaultCipipelineMaven {
+     nodes           = 'devops-linux' /* label of jenkins nodes*/
+     sonarlang       = 'java'   /* language for sonarqube analysis */
+     email           = 'dg_art-lego@swisscard.ch' /* group mail for notifications */
+     schedule        = ''
+     skipReportStage = true
+
+     java            = 'JAVA-17'
+     maven           = 'MAVEN-3.8.6'
+
+     mavenBuildOptions = '-Penable-docker-builds'
+     mavenReleaseOptions = '-Penable-docker-builds'
+ }

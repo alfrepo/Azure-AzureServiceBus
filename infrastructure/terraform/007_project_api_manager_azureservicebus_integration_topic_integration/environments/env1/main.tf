@@ -9,8 +9,8 @@ terraform {
   }
 
   backend "azurerm" {
-      resource_group_name  = "alfdevtfstateblob"
-      storage_account_name = "alfdevtfstateblob"
+      resource_group_name  = "alf-dev-poc-tfstateblob"
+      storage_account_name = "alfdevtfstateblob2"
       container_name       = "alfdevtfstateblob"
       key                  = "007_project_api_manager_azureservicebus_integration_topic_integration.tfstate"
   }

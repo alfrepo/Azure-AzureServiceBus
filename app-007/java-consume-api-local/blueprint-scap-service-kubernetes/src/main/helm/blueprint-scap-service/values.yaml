@@ -1,0 +1,24 @@
+global:
+  appName: blueprint-scap-service
+  appVersion: ${project.version}
+
+common:
+  replicaCount: 1
+
+  image:
+    repository: ${docker.pushRegistryPath}blueprint-scap-service
+    tag: ${jib.to.tags}
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 1.25Gi
+    limits:
+      cpu: 1
+      memory: 1.25Gi
+
+  java:
+    additionalOptions: -Xmx900m -Xms900m
+
+
+

@@ -1,0 +1,32 @@
+{
+  "service": "${application.name}",
+  "pipeline": {
+    "template": "release"
+  },
+  "notifications": {
+    "mail": {
+      "default": "alexander.friesen@swisscard.ch"
+    }
+  },
+  "helm": {
+    "chart": {
+      "version": "${helm.chart-version}"
+    },
+    "valuesFiles": {
+      "git": {
+        "project": "ARC",
+        "repo": "blueprint-scap-service",
+        "ref": "${docker.git.branch}"
+      }
+    }
+  },
+  "deployment": {
+    "namespace": "blueprint-scap-service",
+    "accounts": {
+      "dev": "dev-aks-chn",
+      "sit": "sit-aks-chn",
+      "uat": "uat-aks-chn",
+      "prd": null
+    }
+  }
+}

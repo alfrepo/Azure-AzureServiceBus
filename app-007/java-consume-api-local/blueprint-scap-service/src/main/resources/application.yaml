@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: blueprint-scap-service
+
+---
+spring:
+  config:
+    activate:
+      on-cloud-platform: kubernetes
+    import: optional:configtree:/etc/config/bindings/,optional:/etc/config/application.yaml
+
