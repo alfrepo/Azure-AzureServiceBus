@@ -17,104 +17,40 @@ locals{
   wsdl_example = <<EOF
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-  xmlns:tns="http://www.cleverbuilder.com/BookService/"
+  xmlns:tns="http://sc.intra/AZSBAdapterService/"
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  name="BookService"
-  targetNamespace="http://www.cleverbuilder.com/BookService/">
+  name="AZSBAdapterService"
+  targetNamespace="http://sc.intra/AZSBAdapterService/">
   <wsdl:documentation>Simple WSDL</wsdl:documentation>
 
   <wsdl:types>
-    <xsd:schema targetNamespace="http://www.cleverbuilder.com/BookService/">
-      <xsd:element name="Book">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="ID" type="xsd:string" minOccurs="0" />
-            <xsd:element name="Title" type="xsd:string" />
-            <xsd:element name="Author" type="xsd:string" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="Books">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element ref="tns:Book" minOccurs="0" maxOccurs="unbounded" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-
-      <xsd:element name="GetBook">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="ID" type="xsd:string" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="GetBookResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element ref="tns:Book" minOccurs="0" maxOccurs="1" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-
-      <xsd:element name="AddBook">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element ref="tns:Book" minOccurs="1" maxOccurs="1" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-      <xsd:element name="AddBookResponse">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element ref="tns:Book" minOccurs="0" maxOccurs="1" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
+    <xsd:schema targetNamespace="http://sc.intra/AZSBAdapterService/">
+      <xsd:element name="AddMessageRequestSchema" type="xsd:string" />
+      <xsd:element name="AddMessageResponseSchema" type="xsd:string" />
     </xsd:schema>
   </wsdl:types>
 
-  <wsdl:message name="GetBookRequest">
-    <wsdl:part element="tns:GetBook" name="parameters" />
+  <wsdl:message name="AddMessageRequest">
+    <wsdl:part name="parameters" element="tns:AddMessageRequestSchema"></wsdl:part>
   </wsdl:message>
-  <wsdl:message name="GetBookResponse">
-    <wsdl:part element="tns:GetBookResponse" name="parameters" />
-  </wsdl:message>
-  <wsdl:message name="AddBookRequest">
-    <wsdl:part name="parameters" element="tns:AddBook"></wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="AddBookResponse">
-    <wsdl:part name="parameters" element="tns:AddBookResponse"></wsdl:part>
+  <wsdl:message name="AddMessageResponse">
+    <wsdl:part name="parameters" element="tns:AddMessageResponseSchema"></wsdl:part>
   </wsdl:message>
 
-  <wsdl:portType name="BookService">
-    <wsdl:operation name="GetBook">
-      <wsdl:input message="tns:GetBookRequest" />
-      <wsdl:output message="tns:GetBookResponse" />
-    </wsdl:operation>
-    <wsdl:operation name="AddBook">
-      <wsdl:input message="tns:AddBookRequest"></wsdl:input>
-      <wsdl:output message="tns:AddBookResponse"></wsdl:output>
+  <wsdl:portType name="AZSBAdapterService">
+    <wsdl:operation name="AddMessage">
+      <wsdl:input message="tns:AddMessageRequest"></wsdl:input>
+      <wsdl:output message="tns:AddMessageResponse"></wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
 
-  <wsdl:binding name="BookServiceSOAP" type="tns:BookService">
+  <wsdl:binding name="AZSBAdapterServiceSOAP" type="tns:AZSBAdapterService">
     <soap:binding style="document"
       transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetBook">
+    <wsdl:operation name="AddMessage">
       <soap:operation
-        soapAction="http://www.cleverbuilder.com/BookService/GetBook" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="AddBook">
-      <soap:operation
-        soapAction="http://www.cleverbuilder.com/BookService/AddBook" />
+        soapAction="http://sc.intra/AZSBAdapterService/AddMessage" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -124,12 +60,12 @@ locals{
     </wsdl:operation>
   </wsdl:binding>
 
-  <wsdl:service name="BookService">
-    <wsdl:port binding="tns:BookServiceSOAP" name="BookServiceSOAP1">
-      <soap:address location="http://www.example.org/BookService" />
+  <wsdl:service name="AZSBAdapterService">
+    <wsdl:port binding="tns:AZSBAdapterServiceSOAP" name="AZSBAdapterServiceSOAP1">
+      <soap:address location="http://sc.intra/AZSBAdapterService" />
     </wsdl:port>
-    <wsdl:port binding="tns:BookServiceSOAP" name="BookServiceSOAP2">
-      <soap:address location="http://www.example.org/BookService" />
+    <wsdl:port binding="tns:AZSBAdapterServiceSOAP" name="AZSBAdapterServiceSOAP2">
+      <soap:address location="http://sc.intra/AZSBAdapterService" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
@@ -154,8 +90,8 @@ resource "azurerm_api_management_api" "apim_api_soap" {
     content_value  = local.wsdl_example
 
     wsdl_selector {
-      service_name  = "BookService"
-      endpoint_name = "BookServiceSOAP1"
+      service_name  = "AZSBAdapterService"
+      endpoint_name = "AZSBAdapterServiceSOAP1"
     }
   }
 }
