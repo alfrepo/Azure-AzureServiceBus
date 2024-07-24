@@ -40,6 +40,13 @@ Unauthenticated access is allowed for "/public/*"
 curl http://localhost:7080/public/hello
 ```
 
+## login
+
+Use the login / pass 
+from ''applicaiton.properties''
+
+should be admin/admin
+
 
 # Docker
 
@@ -127,16 +134,46 @@ ghcr.io/alfrepo/demo-consume-api
 And make it "public" under "Change package visibility" 
 so that minikube can access it.
 
+And you can pull your image via 
+
+```
+docker pull ghcr.io/alfrepo/demo-consume-api:latest
+```
+
+## Using kubectl with minikube
+
+Deploy my prebuilt container from the docker-registry.
+
+Important: Use the `minikube kubectl` to avoid the "Unauthorized" error.
+
+
+Or just start using the alias
+```
+function kubectl {
+param(
+[Parameter(Mandatory = $false)]
+[string] $arguments
+)
+minikube kubectl -- $arguments
+}
+```
+
+## Expose the port on windows
+
+```
+minikube service --url demo-consume-api
+http://127.0.0.1:52260
+❗  Because you are using a Docker driver on windows, the terminal needs to be open to run it.```
+```
+
 ## Deploymnent on K8s manually
 
-Deploy my prebuilt container
-
 ```
-kubectl create deployment demo-consume-api --image=ghcr.io/alfrepo/demo-consume-api:latest
+minikube kubectl -- create deployment demo-consume-api --image=ghcr.io/alfrepo/demo-consume-api:latest
 ```
 
-Now expose the api
-```
-kubectl expose deployment demo-consume-api --type=LoadBalancer --port=8080
-```
+And go to
 
+```
+http://127.0.0.1:52260/public/hello
+```
