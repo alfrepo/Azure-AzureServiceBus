@@ -95,3 +95,54 @@ resource "azurerm_api_management_api" "apim_api_soap" {
     }
   }
 }
+
+
+
+# https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
+resource "azurerm_api_management_api_operation_policy" "apim_api_operation_policy_servicebus" {
+  api_name            = azurerm_api_management_api_operation.apim_api_opn.api_name
+  api_management_name = azurerm_api_management_api_operation.apim_api_opn.api_management_name
+  resource_group_name = azurerm_api_management_api_operation.apim_api_opn.resource_group_name
+  operation_id        = azurerm_api_management_api_operation.apim_api_opn.operation_id
+
+  xml_content = <<XML
+<policies>
+  <inbound>
+    <base />
+    <authentication-managed-identity resource="https://servicebus.azure.net/" />
+    <set-header name="BrokerProperties" exists-action="override">
+      <value>@{  
+        var json = new JObject();  
+        json.Add("MessageId", context.RequestId);  
+        return json.ToString(Newtonsoft.Json.Formatting.None);                      
+      }</value>
+    </set-header>
+    <set-backend-service base-url="{{sb-base-url}}" />
+    <rewrite-uri template="{{sb-queue_or_topic}}/messages" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <choose>
+      <when condition="@(context.Response.StatusCode == 201)">
+        <set-header name="Content-Type" exists-action="override">
+          <value>application/json</value>
+        </set-header>
+        <set-body>@{  
+          var json = new JObject() {{"OperationId", context.RequestId}} ;  
+          return json.ToString(Newtonsoft.Json.Formatting.None);       
+          }</set-body>
+      </when>
+    </choose>
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
+XML
+}
+
+# TODO complete from
+# https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
