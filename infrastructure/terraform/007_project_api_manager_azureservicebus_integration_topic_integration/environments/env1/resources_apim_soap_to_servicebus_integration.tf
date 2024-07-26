@@ -1,3 +1,7 @@
+# Example of a SOAP  API, which redirects calls to the Azure Service Bus topic
+# derived from teh REST API example
+
+
 resource "azurerm_api_management_product" "apim_product_soap" {
   product_id            = "my_product_id_soap"
   api_management_name   = azurerm_api_management.app.name
@@ -143,6 +147,3 @@ resource "azurerm_api_management_api_operation_policy" "apim_api_operation_polic
 </policies>
 XML
 }
-
-# TODO complete from
-# https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
