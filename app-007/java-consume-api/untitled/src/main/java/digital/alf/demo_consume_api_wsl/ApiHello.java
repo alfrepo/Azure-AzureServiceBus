@@ -7,6 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiHello {
 
+    public static int VERSION = 1;
+
+    @GetMapping("/")
+    public String getVerison() {
+        return DemoConsumeApiWslApplication.getVERSIONString();
+    }
+
     @GetMapping("/public/hello/")
     public String helloWorld() {
         return "Hello World!";
