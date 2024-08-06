@@ -49,7 +49,7 @@ dependencies {
 	runtimeOnly("com.sun.xml.ws:jaxws-rt:3.0.0")
 	implementation("com.sun.xml.ws:jaxws-tools:2.1.4")
 
-
+	implementation("com.sun.xml.ws:jaxws-rt:3.0.2") // Replace with the latest compatible version
 }
 
 
@@ -69,4 +69,6 @@ tasks.bootRun {
 
 tasks.wsdl2java {
 	sourcesOutputDir.set(layout.projectDirectory.dir("src/generated/wsdl2java"))
+	packageName.set("digital.alf")
 }
+

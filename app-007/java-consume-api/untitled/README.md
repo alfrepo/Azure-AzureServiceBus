@@ -184,7 +184,9 @@ http://127.0.0.1:52260/public/hello/
 
 
 # Generating WSDL code
-as in https://www.baeldung.com/java-gradle-create-wsdl-stubs
+as in 
+- https://www.baeldung.com/java-gradle-create-wsdl-stubs
+- https://github.com/bjornvester/wsdl2java-gradle-plugin
 
 Generates code from ``src/main/resources/wsdl/*.wsdl``
 
