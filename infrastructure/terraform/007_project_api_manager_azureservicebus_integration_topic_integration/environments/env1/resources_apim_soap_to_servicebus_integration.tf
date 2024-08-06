@@ -1,160 +1,149 @@
-# resource "azurerm_api_management_product" "apim_product2" {
-#   product_id            = "my_product_id2"
-#   api_management_name   = azurerm_api_management.app.name
-#   resource_group_name   = azurerm_resource_group.rg.name
-#   display_name          = "My Product2"
-#   description           = "My Product Description"
-#   terms                 = "My Product Terms"
-#   subscription_required = true
-#   subscriptions_limit   = 1
-#   approval_required     = true
-#   published             = true
-# }
+# Example of a SOAP  API, which redirects calls to the Azure Service Bus topic
+# derived from teh REST API example
 
-# resource "azurerm_api_management_api" "apim_api" {
-#   name                = "example-api-name"
-#   resource_group_name = azurerm_resource_group.rg.name
-#   api_management_name = azurerm_api_management.app.name
-#   revision            = "1"
-#   display_name        = "Integrations of SOAP API with Azure Managed Services"
-#   api_type            = "http"
-#   path                = "soapapi"
-#   protocols           = ["https"]
-#   description           = "Example Test"
-#   service_url           = null
-#   subscription_required = false
 
-#   import {
-#     content_format = "wsdl"
-#     content_value  = local.wsdl_example
+resource "azurerm_api_management_product" "apim_product_soap" {
+  product_id            = "my_product_id_soap"
+  api_management_name   = azurerm_api_management.app.name
+  resource_group_name   = azurerm_resource_group.rg.name
+  display_name          = "My ProductSoap"
+  description           = "My Product Description Soap"
+  terms                 = "My Product Terms"
+  subscription_required = true
+  subscriptions_limit   = 1
+  approval_required     = true
+  published             = true
+}
 
-#     wsdl_selector {
-#       service_name  = "BookService"
-#       endpoint_name = "BookServiceSOAP1"
-#     }
-#   }
-# }
 
-# ### simple.wsdl file
-# locals{
-#   wsdl_example = <<EOF
-# <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-# <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-#   xmlns:tns="http://www.cleverbuilder.com/BookService/"
-#   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-#   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-#   name="BookService"
-#   targetNamespace="http://www.cleverbuilder.com/BookService/">
-#   <wsdl:documentation>Simple WSDL</wsdl:documentation>
+### simple.wsdl file
+locals{
+  wsdl_example = <<EOF
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:tns="http://sc.intra/AZSBAdapterService/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  name="AZSBAdapterService"
+  targetNamespace="http://sc.intra/AZSBAdapterService/">
+  <wsdl:documentation>Simple WSDL</wsdl:documentation>
 
-#   <wsdl:types>
-#     <xsd:schema targetNamespace="http://www.cleverbuilder.com/BookService/">
-#       <xsd:element name="Book">
-#         <xsd:complexType>
-#           <xsd:sequence>
-#             <xsd:element name="ID" type="xsd:string" minOccurs="0" />
-#             <xsd:element name="Title" type="xsd:string" />
-#             <xsd:element name="Author" type="xsd:string" />
-#           </xsd:sequence>
-#         </xsd:complexType>
-#       </xsd:element>
-#       <xsd:element name="Books">
-#         <xsd:complexType>
-#           <xsd:sequence>
-#             <xsd:element ref="tns:Book" minOccurs="0" maxOccurs="unbounded" />
-#           </xsd:sequence>
-#         </xsd:complexType>
-#       </xsd:element>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://sc.intra/AZSBAdapterService/">
+      <xsd:element name="AddMessageRequestSchema" type="xsd:string" />
+      <xsd:element name="AddMessageResponseSchema" type="xsd:string" />
+    </xsd:schema>
+  </wsdl:types>
 
-#       <xsd:element name="GetBook">
-#         <xsd:complexType>
-#           <xsd:sequence>
-#             <xsd:element name="ID" type="xsd:string" />
-#           </xsd:sequence>
-#         </xsd:complexType>
-#       </xsd:element>
-#       <xsd:element name="GetBookResponse">
-#         <xsd:complexType>
-#           <xsd:sequence>
-#             <xsd:element ref="tns:Book" minOccurs="0" maxOccurs="1" />
-#           </xsd:sequence>
-#         </xsd:complexType>
-#       </xsd:element>
+  <wsdl:message name="AddMessageRequest">
+    <wsdl:part name="parameters" element="tns:AddMessageRequestSchema"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AddMessageResponse">
+    <wsdl:part name="parameters" element="tns:AddMessageResponseSchema"></wsdl:part>
+  </wsdl:message>
 
-#       <xsd:element name="AddBook">
-#         <xsd:complexType>
-#           <xsd:sequence>
-#             <xsd:element ref="tns:Book" minOccurs="1" maxOccurs="1" />
-#           </xsd:sequence>
-#         </xsd:complexType>
-#       </xsd:element>
-#       <xsd:element name="AddBookResponse">
-#         <xsd:complexType>
-#           <xsd:sequence>
-#             <xsd:element ref="tns:Book" minOccurs="0" maxOccurs="1" />
-#           </xsd:sequence>
-#         </xsd:complexType>
-#       </xsd:element>
-#     </xsd:schema>
-#   </wsdl:types>
+  <wsdl:portType name="AZSBAdapterService">
+    <wsdl:operation name="AddMessage">
+      <wsdl:input message="tns:AddMessageRequest"></wsdl:input>
+      <wsdl:output message="tns:AddMessageResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
 
-#   <wsdl:message name="GetBookRequest">
-#     <wsdl:part element="tns:GetBook" name="parameters" />
-#   </wsdl:message>
-#   <wsdl:message name="GetBookResponse">
-#     <wsdl:part element="tns:GetBookResponse" name="parameters" />
-#   </wsdl:message>
-#   <wsdl:message name="AddBookRequest">
-#     <wsdl:part name="parameters" element="tns:AddBook"></wsdl:part>
-#   </wsdl:message>
-#   <wsdl:message name="AddBookResponse">
-#     <wsdl:part name="parameters" element="tns:AddBookResponse"></wsdl:part>
-#   </wsdl:message>
+  <wsdl:binding name="AZSBAdapterServiceSOAP" type="tns:AZSBAdapterService">
+    <soap:binding style="document"
+      transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AddMessage">
+      <soap:operation
+        soapAction="http://sc.intra/AZSBAdapterService/AddMessage" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
 
-#   <wsdl:portType name="BookService">
-#     <wsdl:operation name="GetBook">
-#       <wsdl:input message="tns:GetBookRequest" />
-#       <wsdl:output message="tns:GetBookResponse" />
-#     </wsdl:operation>
-#     <wsdl:operation name="AddBook">
-#       <wsdl:input message="tns:AddBookRequest"></wsdl:input>
-#       <wsdl:output message="tns:AddBookResponse"></wsdl:output>
-#     </wsdl:operation>
-#   </wsdl:portType>
+  <wsdl:service name="AZSBAdapterService">
+    <wsdl:port binding="tns:AZSBAdapterServiceSOAP" name="AZSBAdapterServiceSOAP1">
+      <soap:address location="http://sc.intra/AZSBAdapterService" />
+    </wsdl:port>
+    <wsdl:port binding="tns:AZSBAdapterServiceSOAP" name="AZSBAdapterServiceSOAP2">
+      <soap:address location="http://sc.intra/AZSBAdapterService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
+EOF
+}
 
-#   <wsdl:binding name="BookServiceSOAP" type="tns:BookService">
-#     <soap:binding style="document"
-#       transport="http://schemas.xmlsoap.org/soap/http" />
-#     <wsdl:operation name="GetBook">
-#       <soap:operation
-#         soapAction="http://www.cleverbuilder.com/BookService/GetBook" />
-#       <wsdl:input>
-#         <soap:body use="literal" />
-#       </wsdl:input>
-#       <wsdl:output>
-#         <soap:body use="literal" />
-#       </wsdl:output>
-#     </wsdl:operation>
-#     <wsdl:operation name="AddBook">
-#       <soap:operation
-#         soapAction="http://www.cleverbuilder.com/BookService/AddBook" />
-#       <wsdl:input>
-#         <soap:body use="literal" />
-#       </wsdl:input>
-#       <wsdl:output>
-#         <soap:body use="literal" />
-#       </wsdl:output>
-#     </wsdl:operation>
-#   </wsdl:binding>
+resource "azurerm_api_management_api" "apim_api_soap" {
+  name                = "api-name-soap"
+  resource_group_name = azurerm_resource_group.rg.name
+  api_management_name = azurerm_api_management.app.name
+  revision            = "1"
+  display_name        = "Integrations of SOAP API with Azure Managed Services"
+  api_type            = "http"
+  path                = "soapapi"
+  protocols           = ["https"]
+  description           = "Example Test"
+  service_url           = null
+  subscription_required = false
 
-#   <wsdl:service name="BookService">
-#     <wsdl:port binding="tns:BookServiceSOAP" name="BookServiceSOAP1">
-#       <soap:address location="http://www.example.org/BookService" />
-#     </wsdl:port>
-#     <wsdl:port binding="tns:BookServiceSOAP" name="BookServiceSOAP2">
-#       <soap:address location="http://www.example.org/BookService" />
-#     </wsdl:port>
-#   </wsdl:service>
-# </wsdl:definitions>
-# EOF
-# }
+  import {
+    content_format = "wsdl"
+    content_value  = local.wsdl_example
+
+    wsdl_selector {
+      service_name  = "AZSBAdapterService"
+      endpoint_name = "AZSBAdapterServiceSOAP1"
+    }
+  }
+}
+
+
+
+# https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
+resource "azurerm_api_management_api_operation_policy" "apim_api_operation_policy_servicebus" {
+  api_name            = azurerm_api_management_api_operation.apim_api_opn.api_name
+  api_management_name = azurerm_api_management_api_operation.apim_api_opn.api_management_name
+  resource_group_name = azurerm_api_management_api_operation.apim_api_opn.resource_group_name
+  operation_id        = azurerm_api_management_api_operation.apim_api_opn.operation_id
+
+  xml_content = <<XML
+<policies>
+  <inbound>
+    <base />
+    <authentication-managed-identity resource="https://servicebus.azure.net/" />
+    <set-header name="BrokerProperties" exists-action="override">
+      <value>@{  
+        var json = new JObject();  
+        json.Add("MessageId", context.RequestId);  
+        return json.ToString(Newtonsoft.Json.Formatting.None);                      
+      }</value>
+    </set-header>
+    <set-backend-service base-url="{{sb-base-url}}" />
+    <rewrite-uri template="{{sb-queue_or_topic}}/messages" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+    <choose>
+      <when condition="@(context.Response.StatusCode == 201)">
+        <set-header name="Content-Type" exists-action="override">
+          <value>application/json</value>
+        </set-header>
+        <set-body>@{  
+          var json = new JObject() {{"OperationId", context.RequestId}} ;  
+          return json.ToString(Newtonsoft.Json.Formatting.None);       
+          }</set-body>
+      </when>
+    </choose>
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>
+XML
+}

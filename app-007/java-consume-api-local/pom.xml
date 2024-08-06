@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <parent>
+    <groupId>ch.swisscard.platform</groupId>
+    <artifactId>dipws-common-starter-parent-v3</artifactId>
+    <version>2023.35.10-nt</version>
+    <relativePath />
+  </parent>
+
+  <groupId>ch.swisscard.arc.scap</groupId>
+  <artifactId>blueprint-parent</artifactId>
+  <version>2023.36.2-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <scm>
+    <connection>scm:git:https://scm.sc.intra/scm/arc/blueprint-scap-service.git</connection>
+    <developerConnection>scm:git:https://scm.sc.intra/scm/arc/blueprint-scap-service.git</developerConnection>
+    <url>https://scm.sc.intra/scm/arc/blueprint-scap-service.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <modules>
+    <module>blueprint-scap-service</module>
+    <module>blueprint-scap-service-kubernetes</module>
+  </modules>
+
+  <properties>
+    <application.name>blueprint-scap-service</application.name>
+    <docker.pushRegistryPath>arch/</docker.pushRegistryPath>
+  </properties>
+
+</project>

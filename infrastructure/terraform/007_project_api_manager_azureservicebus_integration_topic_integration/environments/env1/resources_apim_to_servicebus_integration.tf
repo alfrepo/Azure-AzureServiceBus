@@ -1,3 +1,6 @@
+# Example of a REST API, which redirects calls to the Azure Service Bus topic
+# https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
+
 resource "azurerm_api_management_product" "apim_product" {
   product_id            = "my_product_id"
   api_management_name   = azurerm_api_management.app.name
@@ -45,46 +48,7 @@ resource "azurerm_api_management_api_operation" "apim_api_opn" {
   description         = "Send data to the service bus queue"
 }
 
-## link the API Management to the Azure Service Bus. 
-# First, allow the API Management to access the Azure Service Bus Topic:
 
-
-# TODO fix
-#  principal_id         = azurerm_api_management.app.identity.0.principal_id
-# azurerm_api_management.app.identity is empty list of object
-#The given key does not identify an element in this collection value: the collection has no elements
-
-# resource "azurerm_role_assignment" "apim_role_assignment" {
-#   scope                = azurerm_servicebus_namespace.sb.id
-#   role_definition_name = "Azure Service Bus Data Sender"
-#   principal_id         = azurerm_api_management.app.identity.0.principal_id
-# }
-
-# TODO try this code
-resource "azurerm_role_assignment" "apim_role_assignment" {
-  scope                =  "/subscriptions/${data.azurerm_subscription.current.subscription_id}/resourceGroups/${azurerm_resource_group.rg.name}"
-  role_definition_name = "Azure Service Bus Data Sender"
-  principal_id         = azurerm_api_management.app.identity.0.principal_id
-  depends_on           = [azurerm_api_management.app]
-}
-
-# tell API Management how to connect to the Azure Service Bus Topic.
-
-resource "azurerm_api_management_named_value" "nv_sb_base_url" {
-  name                = "sb-base-url"
-  resource_group_name = azurerm_resource_group.rg.name
-  api_management_name = azurerm_api_management.app.name
-  display_name        = "sb-base-url"
-  value               = "https://${azurerm_servicebus_namespace.sb.name}.servicebus.windows.net"
-}
-
-resource "azurerm_api_management_named_value" "nv_sb_queue" {
-  name                = "sb-queue_or_topic"
-  resource_group_name = azurerm_resource_group.rg.name
-  api_management_name = azurerm_api_management.app.name
-  display_name        = "sb-queue_or_topic"
-  value               = azurerm_servicebus_topic.mtopic.name
-}
 
 # Finally, we need to create the API Management Policy that will send the message to the Azure Service Bus Topic.
 
@@ -133,6 +97,3 @@ resource "azurerm_api_management_api_operation_policy" "apim_api_operation_polic
 </policies>
 XML
 }
-
-# TODO complete from
-# https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/

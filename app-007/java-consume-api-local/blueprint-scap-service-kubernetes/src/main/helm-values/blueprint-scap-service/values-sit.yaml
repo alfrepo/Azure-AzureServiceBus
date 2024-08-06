@@ -1,0 +1,13 @@
+global:
+  environment: sit
+
+common:
+  istio:
+    hosts:
+      - "blueprint-scap-service.svc.sit.sc.intra"
+
+  env:
+    STAGE: sit
+    spring_profiles_active: sit,kubernetes
+
+  applicationYaml:

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ApiHello {
 
-    public static int VERSION = 1;
+    public static int VERSION = 2;
 
     @GetMapping("/")
     public String getVerison() {

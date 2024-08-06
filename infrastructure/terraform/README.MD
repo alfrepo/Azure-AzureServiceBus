@@ -26,6 +26,13 @@ For some reason it helps to manually
  Now the project will deploy correctly.
 
 
+## calling the API
+
+### Excaping 
+
+Pass messages where `<` is escaped as `&lt;` and `>` as `&gt;`.
+
+
 
 ## TODO
 

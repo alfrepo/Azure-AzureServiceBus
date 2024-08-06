@@ -1,7 +1,10 @@
 # Build
 
 ``` 
-bash gradlew build
+./gradlew clean build
+
+#if you wanna skip tests
+./gradlew clean build -x test
 ```
 
 # Run
@@ -74,11 +77,9 @@ and use personal token like "azure_service_bus_k8s" on the path.
 
 ```
 sudo su
-./gradlew bootBuildImage --imageName=ghcr.io/alfrepo/demo-consume-api
-```
+./gradlew bootBuildImage --imageName=ghcr.io/alfrepo/demo-consume-api -PimageTag=latest```
 
 ## And run
-
 
 
 ```
@@ -123,7 +124,7 @@ docker login --username azure_service_bus_k8s --password <ghp_..........S> ghcr.
 ### now push  to the docker registry
 
 ```
-docker push 'ghcr.io/alfrepo/demo-consume-api'
+docker push 'ghcr.io/alfrepo/demo-consume-api:latest'
 ```
 
 Then find your docker repo under
@@ -170,10 +171,11 @@ http://127.0.0.1:52260
 
 ```
 minikube kubectl -- create deployment demo-consume-api --image=ghcr.io/alfrepo/demo-consume-api:latest
+minikube kubectl -- delete deployment demo-consume-api
 ```
 
 And go to
 
 ```
-http://127.0.0.1:52260/public/hello
+http://127.0.0.1:52260/public/hello/
 ```
