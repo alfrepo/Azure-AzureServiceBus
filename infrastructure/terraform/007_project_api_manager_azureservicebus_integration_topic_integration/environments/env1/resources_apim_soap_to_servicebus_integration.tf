@@ -103,7 +103,7 @@ resource "azurerm_api_management_api" "apim_api_soap" {
 
 
 # https://byalexblog.net/article/azure-apimanagement-to-azure-service-bus/
-resource "azurerm_api_management_api_operation_policy" "apim_api_operation_policy_servicebus" {
+resource "azurerm_api_management_api_operation_policy" "apim_api_operation_policy_servicebus_soap" {
   api_name            = azurerm_api_management_api_operation.apim_api_opn.api_name
   api_management_name = azurerm_api_management_api_operation.apim_api_opn.api_management_name
   resource_group_name = azurerm_api_management_api_operation.apim_api_opn.resource_group_name

@@ -18,6 +18,7 @@ tasks.bootRun {
 	systemProperties["server.port"] = "7080"
 }
 ``` 
+
 and then run
 
 ``` 
@@ -78,6 +79,7 @@ and use personal token like "azure_service_bus_k8s" on the path.
 ```
 sudo su
 ./gradlew bootBuildImage --imageName=ghcr.io/alfrepo/demo-consume-api -PimageTag=latest```
+```
 
 ## And run
 
@@ -178,4 +180,16 @@ And go to
 
 ```
 http://127.0.0.1:52260/public/hello/
+```
+
+
+# Generating WSDL code
+as in https://www.baeldung.com/java-gradle-create-wsdl-stubs
+
+Generates code from ``src/main/resources/wsdl/*.wsdl``
+
+generated classes are saved in the ``build/generated/sources/wsdl2java`` folder
+
+```
+bash gradlew clean wsdl2java
 ```
