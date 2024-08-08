@@ -69,10 +69,13 @@ tasks.bootRun {
 
 tasks.wsdl2java {
 	sourcesOutputDir.set(layout.projectDirectory.dir("src/generated/wsdl2java"))
-	packageName.set("digital.alf")
+	packageName.set("digital.alf.gen.apim1")
 }
 
 tasks.withType<Jar>() {
-
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+java.sourceSets["main"].java {
+	srcDir("src/generated/wsdl2java")
 }
