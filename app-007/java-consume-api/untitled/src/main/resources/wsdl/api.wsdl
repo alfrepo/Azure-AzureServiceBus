@@ -1,42 +1,83 @@
-<definitions name="PutMessageService"
-             targetNamespace="http://spring.io/guides/gs-producing-web-service"
-             xmlns="http://schemas.xmlsoap.org/wsdl/"
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-             xmlns:tns="http://spring.io/guides/gs-producing-web-service"
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
-  <message name="PutMessageRequest">
-    <part name="message" type="xsd:string"/>
+             xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+             xmlns:tns="http://www.dataaccess.com/webservicesserver/"
+             name="PutMessage"
+             targetNamespace="http://www.dataaccess.com/webservicesserver/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://www.dataaccess.com/webservicesserver/">
+      <xs:element name="PutMessage">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PutMessageRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="PutMessageResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="PutMessageResult" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </types>
+  <message name="PutMessage">
+    <part name="parameters" element="tns:PutMessage"/>
   </message>
-
+  <message name="PutMessageSoapRequest">
+    <part name="parameters" element="tns:PutMessageRequest"/>
+  </message>
   <message name="PutMessageResponse">
-    <part name="status" type="xsd:string"/>  </message>
-
-  <portType name="PutMessagePort">
-    <operation name="putMessage">
-      <input message="tns:PutMessageRequest"/>
+    <part name="parameters" element="tns:PutMessageResponse"/>
+  </message>
+  <portType name="PutMessageSoapType">
+    <operation name="PutMessage">
+      <documentation>Returns the feedback by AzureServicebus when a message is pasted into it.</documentation>
+      <input message="tns:PutMessageSoapRequest"/>
       <output message="tns:PutMessageResponse"/>
     </operation>
   </portType>
-
-  <binding name="PutMessageBinding" type="tns:PutMessagePort">
+  <binding name="PutMessageSoapBinding" type="tns:PutMessageSoapType">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <operation name="putMessage">
-      <soap:operation soapAction="http://spring.io/guides/gs-producing-web-service/putMessage"/>
+    <operation name="PutMessage">
+      <soap:operation soapAction="" style="document"/>
       <input>
-        <soap:body use="literal" namespace="http://spring.io/guides/gs-producing-web-service"/>
+        <soap:body use="literal"/>
       </input>
       <output>
-        <soap:body use="literal" namespace="http://spring.io/guides/gs-producing-web-service"/>
+        <soap:body use="literal"/>
       </output>
     </operation>
   </binding>
-
-  <service name="PutMessageService">
-    <documentation>Put Message Web Service</documentation>
-    <port binding="tns:PutMessageBinding" name="PutMessagePort">
-      <soap:address location="http://your-service-address/PutMessage"/>
+  <binding name="PutMessageSoapBinding12" type="tns:PutMessageSoapType">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="PutMessage">
+      <soap12:operation soapAction="" style="document"/>
+      <input>
+        <soap12:body use="literal"/>
+      </input>
+      <output>
+        <soap12:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="PutMessage">
+    <documentation>The Web Service, to interact with azure service bus.</documentation>
+    <port name="PutMessageSoap" binding="tns:PutMessageSoapBinding">
+      <soap:address location="https://www.dataaccess.com/webservicesserver/numberconversion.wso"/>
+    </port>
+    <port name="PutMessageSoap12" binding="tns:PutMessageSoapBinding12">
+      <soap12:address location="https://www.dataaccess.com/webservicesserver/numberconversion.wso"/>
     </port>
   </service>
-
 </definitions>

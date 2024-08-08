@@ -1,6 +1,10 @@
 package digital.alf.demo_consume_api_wsl;
 
 import digital.alf.demo_consume_api_wsl.soap.SoapClient;
+import digital.alf.gen.apim1.PutMessage;
+import digital.alf.gen.apim1.PutMessageRequest;
+import digital.alf.gen.apim1.PutMessageSoapType;
+import digital.alf.gen.apim1.PutMessage_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +19,7 @@ public class ApiHello {
 
     @Autowired
     private SoapClient soapClient;
+
 
     public static String APIM_SUBSCRIPTION= "98ceb311f9e148a5b57b8abeb81fe3fd";
 
@@ -69,8 +74,22 @@ public class ApiHello {
 
     @GetMapping("/public/triggerapirequest2/")
     public String triggerapirequest2() {
-        Object request = new Object();
-        Object res = soapClient.callWebService(URL_SOAP_APIM, request);
+        PutMessage request = new PutMessage();
+        request.setMessage("");
+
+
+
+        PutMessage_Service putMessageService = new PutMessage_Service();
+
+        // String wsdlUrl = "https://your-webservice-url/wsdl"; // Replace with actual URL
+        // myWebService = putMessageService.getPort(MyWebService.class, URL_SOAP_APIM);
+        PutMessageSoapType myWebService = putMessageService.getPutMessageSoap();
+
+        PutMessageRequest putMessageRequest = new PutMessageRequest();
+        putMessageRequest.setMessage("");
+        myWebService.putMessage(putMessageRequest);
+
+        // Object res = soapClient.callWebService(URL_SOAP_APIM, request);
         return "End triggerapirequest2";
     }
 

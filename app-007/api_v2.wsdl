@@ -15,13 +15,6 @@
           </xs:sequence>
         </xs:complexType>
       </xs:element>
-      <xs:element name="PutMessageRequest">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="message" type="xs:string"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
       <xs:element name="PutMessageResponse">
         <xs:complexType>
           <xs:sequence>
@@ -34,16 +27,13 @@
   <message name="PutMessage">
     <part name="parameters" element="tns:PutMessage"/>
   </message>
-  <message name="PutMessageSoapRequest">
-    <part name="parameters" element="tns:PutMessageRequest"/>
-  </message>
   <message name="PutMessageResponse">
     <part name="parameters" element="tns:PutMessageResponse"/>
   </message>
   <portType name="PutMessageSoapType">
     <operation name="PutMessage">
       <documentation>Returns the feedback by AzureServicebus when a message is pasted into it.</documentation>
-      <input message="tns:PutMessageSoapRequest"/>
+      <input message="tns:PutMessageRequest"/>
       <output message="tns:PutMessageResponse"/>
     </operation>
   </portType>
