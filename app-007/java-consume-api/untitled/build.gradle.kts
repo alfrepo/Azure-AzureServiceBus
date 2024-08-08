@@ -72,3 +72,7 @@ tasks.wsdl2java {
 	packageName.set("digital.alf")
 }
 
+tasks.withType<Jar>() {
+
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

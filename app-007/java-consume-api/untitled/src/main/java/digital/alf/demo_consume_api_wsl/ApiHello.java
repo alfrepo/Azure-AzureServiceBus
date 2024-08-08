@@ -1,15 +1,20 @@
 package digital.alf.demo_consume_api_wsl;
 
+import digital.alf.demo_consume_api_wsl.soap.SoapClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 
 @RestController
 public class ApiHello {
+
+    public static final String URL_SOAP_APIM = "https://alfdevapi7-example-apim.azure-api.net/suffix1";
+
+    @Autowired
+    private SoapClient soapClient;
 
     public static String APIM_SUBSCRIPTION= "98ceb311f9e148a5b57b8abeb81fe3fd";
 
@@ -64,51 +69,12 @@ public class ApiHello {
 
     @GetMapping("/public/triggerapirequest2/")
     public String triggerapirequest2() {
-//
-//        // Define the URL
-//        String url = "https://alfdevapi7-example-apim.azure-api.net/soapapi/AddMessage/";
-//
-//        // Create a RestTemplate object
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        // Create HttpHeaders object
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.TEXT_XML);
-//        headers.set("subscription", APIM_SUBSCRIPTION);
-//
-//        // my trial
-//        webServiceTemplate().marshalSendAndReceive(request);
-//
-//        // Set the request body with JAXB Marshaller
-//        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-//        marshaller.setClasses(AddMessageRequestSchema.class); // Replace with your actual request class
-//        String requestBody = "<addMessageRequestSchema>sample</addMessageRequestSchema>"; // Replace with actual XML
-//        Object requestObject = marshaller.unmarshalFromString(requestBody);
-//
-//
-//        // Create a HttpEntity object with body and headers
-//        HttpEntity<Object> entity = new HttpEntity<>(requestObject, headers);
-//
-//        // Send the POST request and get the response
-//        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
-//
-//        // Check the response status code
-//        if (response.getStatusCode() == HttpStatus.OK) {
-//            String body = response.getBody();
-//            System.out.println("Response body: " + body);
-//        } else {
-//            System.out.println("Error: " + response.getStatusCodeValue());
-//        }
-
+        Object request = new Object();
+        Object res = soapClient.callWebService(URL_SOAP_APIM, request);
         return "End triggerapirequest2";
     }
 
 
-    public WebServiceTemplate webServiceTemplate() {
-        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-        webServiceTemplate.setMessageSender(new HttpUrlConnectionMessageSender());
-        return webServiceTemplate;
-    }
 
 
 
