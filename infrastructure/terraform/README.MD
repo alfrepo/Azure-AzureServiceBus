@@ -37,7 +37,8 @@ Pass messages where `<` is escaped as `&lt;` and `>` as `&gt;`.
 ## TODO
 
 
-
+- TODO check what XML to JSON APIM policy does to escaping by Tracing
+ - then figure out in which form to pass the escaped json, so that it gets sent to the AZSB correctly.
  - WONT FIX move the policy, backend from "all operations" the GET operation level
  - DONE make the api redeployment - also deploy the code and http_trigger. At he moment the code disapears when redeployed
  - DONE add CORS origin * https://stackoverflow.com/questions/62040830/azure-api-management-origin-header-was-missing-or-empty-and-the-request-was-cl

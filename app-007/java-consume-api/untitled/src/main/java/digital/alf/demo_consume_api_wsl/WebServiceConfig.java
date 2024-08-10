@@ -1,9 +1,11 @@
 package digital.alf.demo_consume_api_wsl;
 
+import digital.alf.demo_consume_api_wsl.soap.LogHttpHeaderClientInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 @Configuration
 public class WebServiceConfig {
@@ -19,6 +21,12 @@ public class WebServiceConfig {
         WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
+
+        // register the LogHttpHeaderClientInterceptor
+        ClientInterceptor[] interceptors =
+                new ClientInterceptor[] {new LogHttpHeaderClientInterceptor()};
+        webServiceTemplate.setInterceptors(interceptors);
+
         // Configure other properties as needed
         return webServiceTemplate;
     }
@@ -34,6 +42,8 @@ public class WebServiceConfig {
         //marshaller.setContextPaths("", "");
         return marshaller;
     }
+
+
 
 
 

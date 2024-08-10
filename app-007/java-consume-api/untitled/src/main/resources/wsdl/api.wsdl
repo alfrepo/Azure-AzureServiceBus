@@ -23,11 +23,9 @@
         </xs:complexType>
       </xs:element>
       <xs:element name="PutMessageResponse">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:element name="PutMessageResult" type="xs:string"/>
-          </xs:sequence>
-        </xs:complexType>
+        <xs:simpleType>
+          <xs:restriction base="xs:string"/>
+        </xs:simpleType>
       </xs:element>
     </xs:schema>
   </types>
@@ -75,9 +73,6 @@
     <documentation>The Web Service, to interact with azure service bus.</documentation>
     <port name="PutMessageSoap" binding="tns:PutMessageSoapBinding">
       <soap:address location="https://www.dataaccess.com/webservicesserver/numberconversion.wso"/>
-    </port>
-    <port name="PutMessageSoap12" binding="tns:PutMessageSoapBinding12">
-      <soap12:address location="https://www.dataaccess.com/webservicesserver/numberconversion.wso"/>
     </port>
   </service>
 </definitions>

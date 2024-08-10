@@ -50,6 +50,9 @@ dependencies {
 	implementation("com.sun.xml.ws:jaxws-tools:2.1.4")
 
 	implementation("com.sun.xml.ws:jaxws-rt:3.0.2") // Replace with the latest compatible version
+
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation("org.json:json:20240303")
 }
 
 

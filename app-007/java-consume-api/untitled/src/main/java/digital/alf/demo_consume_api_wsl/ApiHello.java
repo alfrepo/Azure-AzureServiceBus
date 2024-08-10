@@ -1,16 +1,21 @@
 package digital.alf.demo_consume_api_wsl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import digital.alf.demo_consume_api_wsl.soap.SoapClient;
-import digital.alf.gen.apim1.PutMessage;
 import digital.alf.gen.apim1.PutMessageRequest;
 import digital.alf.gen.apim1.PutMessageSoapType;
 import digital.alf.gen.apim1.PutMessage_Service;
+import net.minidev.json.JSONObject;
+import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @RestController
 public class ApiHello {
@@ -73,21 +78,48 @@ public class ApiHello {
     }
 
     @GetMapping("/public/triggerapirequest2/")
-    public String triggerapirequest2() {
-        PutMessage request = new PutMessage();
-        request.setMessage("");
-
-
-
+    public String triggerapirequest2() throws ParseException, JsonProcessingException {
         PutMessage_Service putMessageService = new PutMessage_Service();
-
-        // String wsdlUrl = "https://your-webservice-url/wsdl"; // Replace with actual URL
-        // myWebService = putMessageService.getPort(MyWebService.class, URL_SOAP_APIM);
         PutMessageSoapType myWebService = putMessageService.getPutMessageSoap();
 
         PutMessageRequest putMessageRequest = new PutMessageRequest();
-        putMessageRequest.setMessage("");
-        myWebService.putMessage(putMessageRequest);
+
+        String jsonString = """
+{
+    "specversion": "1.0",
+    "type": "com.github.pull_request.opened",
+    "source": "https://github.com/cloudevents/spec/pull",
+    "subject": "123",
+    "id": "A234-1234-1234",
+    "time": "2018-04-05T17:31:00Z",
+    "comexampleextension1": "value",
+    "comexampleothervalue": 5,
+    "datacontenttype": "text/json",
+    "data": {
+        "uriFile": "this/is/the/blob/reference/to/tsys/file.json",
+        "uriFileSchema": "this/is/the/blob/reference/to/tsys/fileschema.json",
+        "system": "tsys",
+        "corelationid": "123",
+        "issuingTimeStamp": "2018-04-05T17:31:00Z"
+    }
+}
+                """;
+
+        // Parse JSON string into a Java object
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> parsedJson = objectMapper.readValue(jsonString, Map.class);
+        // Generate escaped JSON string
+        String validatedJsonString = objectMapper.writeValueAsString(parsedJson);
+        String escapedJsonString = JSONObject.escape(validatedJsonString);
+        System.out.println(escapedJsonString);
+
+        putMessageRequest.setMessage(validatedJsonString);
+
+        String operation = "/?soapAction=PutMessage"; // Optional operation part
+        String fullUrl = URL_SOAP_APIM + operation;
+
+        //org.springframework.ws.soap.client.SoapFaultClientException: Error processing request: No such method: PutMessageRequest
+        soapClient.callWebService(fullUrl, putMessageRequest);
 
         // Object res = soapClient.callWebService(URL_SOAP_APIM, request);
         return "End triggerapirequest2";

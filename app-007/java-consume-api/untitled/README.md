@@ -195,3 +195,19 @@ generated classes are saved in the ``build/generated/sources/wsdl2java`` folder
 ```
 bash gradlew clean wsdl2java
 ```
+
+
+
+# Creating a SOAP api
+
+TODO: turn into Terraform code
+
+- go to Azure API Management Service
+- Add API
+- choose WSDL
+- choose SOAP pass-through
+- API URL suffix like "suffix1"  
+- select new API "PutMessage", Settings, Products, choose a published  product like "My ProductSoap"
+
+
+
