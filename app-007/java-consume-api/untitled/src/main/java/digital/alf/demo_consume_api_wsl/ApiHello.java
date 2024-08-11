@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import digital.alf.demo_consume_api_wsl.soap.SoapClient;
 import digital.alf.gen.apim1.PutMessageRequest;
-import digital.alf.gen.apim1.PutMessageSoapType;
-import digital.alf.gen.apim1.PutMessage_Service;
+import jakarta.xml.soap.*;
 import net.minidev.json.JSONObject;
 import org.apache.tomcat.util.json.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.xml.namespace.QName;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 
 @RestController
@@ -28,7 +31,29 @@ public class ApiHello {
 
     public static String APIM_SUBSCRIPTION= "98ceb311f9e148a5b57b8abeb81fe3fd";
 
-    public static int VERSION = 2;
+    public static int VERSION = 3;
+
+    // request JSON
+    public static final String JSON_STRING = """
+{
+    "specversion": "1.0",
+    "type": "com.github.pull_request.opened",
+    "source": "https://github.com/cloudevents/spec/pull",
+    "subject": "123",
+    "id": "A234-1234-1234",
+    "time": "2018-04-05T17:31:00Z",
+    "comexampleextension1": "value",
+    "comexampleothervalue": 5,
+    "datacontenttype": "text/json",
+    "data": {
+        "uriFile": "this/is/the/blob/reference/to/tsys/file.json",
+        "uriFileSchema": "this/is/the/blob/reference/to/tsys/fileschema.json",
+        "system": "tsys",
+        "corelationid": "123",
+        "issuingTimeStamp": "2018-04-05T17:31:00Z"
+    }
+}
+                """;
 
     @GetMapping("/")
     public String getVerison() {
@@ -79,39 +104,9 @@ public class ApiHello {
 
     @GetMapping("/public/triggerapirequest2/")
     public String triggerapirequest2() throws ParseException, JsonProcessingException {
-        PutMessage_Service putMessageService = new PutMessage_Service();
-        PutMessageSoapType myWebService = putMessageService.getPutMessageSoap();
-
         PutMessageRequest putMessageRequest = new PutMessageRequest();
 
-        String jsonString = """
-{
-    "specversion": "1.0",
-    "type": "com.github.pull_request.opened",
-    "source": "https://github.com/cloudevents/spec/pull",
-    "subject": "123",
-    "id": "A234-1234-1234",
-    "time": "2018-04-05T17:31:00Z",
-    "comexampleextension1": "value",
-    "comexampleothervalue": 5,
-    "datacontenttype": "text/json",
-    "data": {
-        "uriFile": "this/is/the/blob/reference/to/tsys/file.json",
-        "uriFileSchema": "this/is/the/blob/reference/to/tsys/fileschema.json",
-        "system": "tsys",
-        "corelationid": "123",
-        "issuingTimeStamp": "2018-04-05T17:31:00Z"
-    }
-}
-                """;
-
-        // Parse JSON string into a Java object
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> parsedJson = objectMapper.readValue(jsonString, Map.class);
-        // Generate escaped JSON string
-        String validatedJsonString = objectMapper.writeValueAsString(parsedJson);
-        String escapedJsonString = JSONObject.escape(validatedJsonString);
-        System.out.println(escapedJsonString);
+        String validatedJsonString = getSoapBodyMessage();
 
         putMessageRequest.setMessage(validatedJsonString);
 
@@ -119,77 +114,77 @@ public class ApiHello {
         String fullUrl = URL_SOAP_APIM + operation;
 
         //org.springframework.ws.soap.client.SoapFaultClientException: Error processing request: No such method: PutMessageRequest
-        soapClient.callWebService(fullUrl, putMessageRequest);
+        Object res = soapClient.callWebService(fullUrl, putMessageRequest);
 
         // Object res = soapClient.callWebService(URL_SOAP_APIM, request);
         return "End triggerapirequest2";
     }
 
+    private static String getSoapBodyMessage() throws JsonProcessingException {
+        // Parse JSON string into a Java object
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> parsedJson = objectMapper.readValue(JSON_STRING, Map.class);
+        // Generate escaped JSON string
+        String validatedJsonString = objectMapper.writeValueAsString(parsedJson);
+        String escapedJsonString = JSONObject.escape(validatedJsonString);
+        System.out.println(escapedJsonString);
+        return validatedJsonString;
+    }
 
 
+    @GetMapping("/public/triggerapirequest3/")
+    public String triggerapirequest3() throws ParseException, IOException, SOAPException {
+
+        String operation = "/?soapAction=PutMessage"; // Optional operation part
+        String fullUrl = URL_SOAP_APIM + operation;
+
+        // Create a SOAP message
+        MessageFactory messageFactory = MessageFactory.newInstance();
+        SOAPMessage soapMessage = messageFactory.createMessage();
+        SOAPPart soapPart = soapMessage.getSOAPPart();
+        SOAPEnvelope envelope = soapPart.getEnvelope();
 
 
+        // Set the namespace for the envelope
+        envelope.addNamespaceDeclaration("soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
 
 
+        // Create the SOAP Body element
+        SOAPBody body = envelope.getBody();
+
+        // Define the namespace and name for PutMessageRequest
+        QName putMessageRequestName = new QName("http://www.dataaccess.com/webservicesserver/",
+                "PutMessageRequest", "da");
+
+        // Create the PutMessageRequest element
+        SOAPElement putMessageRequest = body.addChildElement(putMessageRequestName);
+
+        // Add the "message" element with content
+        SOAPElement messageElement = putMessageRequest.addChildElement(new QName("message"));
+        messageElement.addTextNode("MyExampleMessage");
+
+        System.out.println(messageElement.toString());
+
+        // Send the SOAP message
+        SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
+        SOAPConnection connection = soapConnectionFactory.createConnection();
+
+        URL endpoint = new URL(fullUrl);
+
+        SOAPMessage response = connection.call(soapMessage, endpoint);
+
+        // printing the response
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        response.writeTo(out);
+        System.out.println(new String(out.toByteArray()));
+
+        connection.close();
 
 
+        // Object res = soapClient.callWebService(URL_SOAP_APIM, request);
+        return "End triggerapirequest3";
+    }
 
-
-
-
-
-//
-//    @Bean
-//    public WebServiceTemplate webServiceTemplate() {
-//        WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
-//        webServiceTemplate.setMessageSender(new HttpUrlConnectionMessageSender());
-//        return webServiceTemplate;
-//    }
-//
-//    public String callSoapService(String url, String subscription, String requestBody) {
-//        try {
-//            String soapMessage = createSoapMessage(requestBody);
-//            StreamSource source = new StreamSource(new StringReader(soapMessage));
-//            StringWriter responseWriter = new StringWriter();
-//
-//            WebServiceTemplate webServiceTemplate = webServiceTemplate();
-//
-//            final SoapActionCallback requestCallbackMessage = new SoapActionCallback();
-//            requestCallbackMessage.se
-//
-//            {
-//
-//
-//                this.setSoapAction("AddMessage");
-//                //((SoapMessage)message).getHeaders().add("subscription", subscription);
-//            };
-//
-//            webServiceTemplate.sendSourceAndReceiveToResult(
-//                    url,
-//                    source,
-//                    requestCallbackMessage,
-//                    result -> {
-//                        System.out.println(String.valueOf((Object)result);
-//                        StreamSource streamSource = (StreamSource) result.getPayloadSource();
-//                        StreamResult streamResult = new StreamResult(responseWriter);
-//                        TransformerFactory.newInstance().newTransformer().transform(streamSource, streamResult);
-//                    });
-//
-//            return responseWriter.toString();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    private String createSoapMessage(String requestBody) {
-//        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:web=\"http://www.example.com/webservices\">" +
-//                "<soapenv:Header/>" +
-//                "<soapenv:Body>" +
-//                requestBody +
-//                "</soapenv:Body>" +
-//                "</soapenv:Envelope>";
-//    }
 
 }
 

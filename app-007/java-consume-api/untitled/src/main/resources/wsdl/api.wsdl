@@ -72,7 +72,7 @@
   <service name="PutMessage">
     <documentation>The Web Service, to interact with azure service bus.</documentation>
     <port name="PutMessageSoap" binding="tns:PutMessageSoapBinding">
-      <soap:address location="https://www.dataaccess.com/webservicesserver/numberconversion.wso"/>
+      <soap:address location="https://alfdevapi7-example-apim.azure-api.net/suffix1" />
     </port>
   </service>
 </definitions>

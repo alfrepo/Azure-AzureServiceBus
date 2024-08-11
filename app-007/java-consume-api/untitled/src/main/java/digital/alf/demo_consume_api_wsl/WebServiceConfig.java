@@ -22,6 +22,7 @@ public class WebServiceConfig {
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(marshaller);
 
+
         // register the LogHttpHeaderClientInterceptor
         ClientInterceptor[] interceptors =
                 new ClientInterceptor[] {new LogHttpHeaderClientInterceptor()};
